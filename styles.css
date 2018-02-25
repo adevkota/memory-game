@@ -1,0 +1,16 @@
+#board{
+   display: grid;
+   grid-gap: 5px;
+   grid-template-columns: 50px 50px 50px 50px 50px 50px;
+   grid-template-rows: auto;
+   grid-template-areas: 
+   "tile tile tile tile tile tile"
+   "tile tile tile tile tile tile"
+   "tile tile tile tile tile tile"
+   "tile tile tile tile tile tile";
+}
+
+.tile {
+   background-color: teal;
+   height: 50px;
+}
