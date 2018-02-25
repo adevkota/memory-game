@@ -9,15 +9,19 @@ class Game {
 }
 
 class Board {
-	constructor() {
+	constructor(myWindow) {
+		this.window = myWindow || window;
 		this.tilesArray = [];
 		this.boardSize = 24;
 
 		this.flippedTile = null;
-		this.tileId = [];
-		this.tileValue = [];
+
+		//time to display the tile value in seconds
+		this.flippedTileTimeout = 2;
+
 		this.boardElement = document.querySelector('#board');
 		this.board = '';
+		this.boardReady = false;
 	}
 
 	init() {
@@ -26,12 +30,19 @@ class Board {
 			this.tilesArray.push(tile);
 		}
 		this.render();
-		this.boardElement.addEventListener("click", (e) => {this.onClick(e)})
+		this.boardElement.addEventListener("click", (e) => {this.onClick(e)});
+		this.boardReady = true;
 	}
 	
 	onClick(event) {
-		if(event.target && event.target.classList.contains("tile")) {
-			this.update(event.target.dataset.index);
+		if(this.boardReady && event.target && event.target.classList.contains("tile")) {
+			let tileNum = event.target.dataset.index;
+
+			//ignore click on the same tile
+			if( this.flippedTile === tileNum) {
+				return;
+			}
+			this.update(tileNum);
 		}
 	}
 	render() {
@@ -42,15 +53,32 @@ class Board {
 	}
 
 	tilesMatch(currentFlipped, newFlipped) {
-
+		return this.tilesArray[currentFlipped].value === this.tilesArray[newFlipped].value;
 	}
+
 	update(tileNum) {
+		this.boardReady = false;
 		this.tilesArray[tileNum].flip();
+		this.render();
+		
 		if(this.flippedTile === null) {
 			this.flippedTile = tileNum;
+			this.boardReady = true;
 		} else {
+			this.window.setTimeout(() => {
+				if(this.tilesMatch(this.flippedTile, tileNum)) {
+					this.tilesArray[tileNum].markSolved();
+					this.tilesArray[this.flippedTile].markSolved();
+				} else {
+					this.tilesArray[tileNum].flip();
+					this.tilesArray[this.flippedTile].flip();
+				}
+
+				this.flippedTile = null;
+				this.render();
+				this.boardReady = true;
+			}, this.flippedTileTimeout*1000)
 		}
-		this.render();
 	}
 
 }
@@ -67,11 +95,14 @@ class Tile {
 		this.isFlipped = !this.isFlipped;
 	}
 
+	markSolved() {
+		this.isSolved = true;
+	}
 	render(){
 		return `<div 
 			class="tile"
 			data-index = ${this.index}
-			style = "${this.isSolved? 'display:hidden': ''}">
+			style = "${this.isSolved? 'visibility:hidden': ''}">
 				${this.isFlipped? this.value : ''}
 			</div>`
 	}
