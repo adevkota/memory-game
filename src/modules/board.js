@@ -1,25 +1,18 @@
-class Game {
-	constructor() {
-		this.board = new Board();
-	}
+import { Tile } from "./tile";
 
-	init() {
-		this.board.init();
-	}
-}
-
-class Board {
+export class Board {
 	constructor(myWindow) {
+		//for helping with tests
 		this.window = myWindow || window;
 		this.tilesArray = [];
 		this.boardSize = 24;
 
-		this.flippedTile = null;
 
 		//time to display the tile value in seconds
 		this.flippedTileTimeout = 2;
+		this.flippedTile = null;
 
-		this.boardElement = document.querySelector('#board');
+		this.boardElement = this.window.document.querySelector('#board');
 		this.board = '';
 		this.boardReady = false;
 	}
@@ -82,31 +75,3 @@ class Board {
 	}
 
 }
-
-class Tile {
-	constructor(index, val) {
-		this.index = index;
-		this.value = val || index%12;
-		this.isFlipped = false;
-		this.isSolved = false;
-	}
-
-	flip() {
-		this.isFlipped = !this.isFlipped;
-	}
-
-	markSolved() {
-		this.isSolved = true;
-	}
-	render(){
-		return `<div 
-			class="tile"
-			data-index = ${this.index}
-			style = "${this.isSolved? 'visibility:hidden': ''}">
-				${this.isFlipped? this.value : ''}
-			</div>`
-	}
-}
-
-let game = new Game();
-game.init();
