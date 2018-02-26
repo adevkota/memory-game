@@ -3,6 +3,7 @@ import {Board} from "../../src/modules/board";
 describe("Board", function() {
    let board;
    let renderSpy;
+   let testIndex = 1;
 
    //mock the window object so it does not actually bind event
    let mockWindow = {
@@ -30,8 +31,44 @@ describe("Board", function() {
       board.init();
       expect(board.tilesArray.length).toEqual(24);
       expect(board.render).toHaveBeenCalled();
-
    })
+
+   it("clickHandler should call update if clicked on a different tile", () => {
+      board.boardReady = true;
+      let event = {
+         target: {
+            dataset: {
+               index: testIndex
+            },
+            classList: {
+               contains: () => true
+            }
+         }
+      }
+
+      spyOn(board, 'update');
+      board.onClick(event);
+      expect(board.update).toHaveBeenCalled();
+   });
+
+   it("clickHandler should not call update if clicked on the same tile", () => {
+      board.boardReady = true;
+      board.flippedTileIndex = testIndex;
+      let event = {
+         target: {
+            dataset: {
+               index: testIndex
+            },
+            classList: {
+               contains: () => true
+            }
+         }
+      }
+
+      spyOn(board, 'update');
+      board.onClick(event);
+      expect(board.update).not.toHaveBeenCalled();
+   });
 
    it("render should update innerHTML based on current tilesArray", () => {
       
@@ -60,4 +97,17 @@ describe("Board", function() {
       retVal = board.tilesMatch(1, 1);
       expect(retVal).toEqual(true);
    })
+
+   describe("update method", () => {
+      beforeEach(() => {
+         board.init();
+         board.flippedTileIndex = null;
+      })
+      it('should update flipped index if it another card is not flipped', () => {
+         
+         board.update(testIndex);
+         expect(board.render).toHaveBeenCalled();
+         expect(board.flippedTileIndex).toEqual(testIndex);
+      })
+   });
 })

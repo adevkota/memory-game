@@ -25,6 +25,13 @@ describe("Tile", function() {
       expect(tile.isSolved).toEqual(false);
       tile.markSolved();
       expect(tile.isSolved).toEqual(true);
-      
    });
+
+   it("render should return a div  with appropriate value", () =>{
+      let retVal = tile.render();
+      expect(retVal).toContain(`data-index = ${testIndex}`);
+      expect(retVal).not.toContain(`style = 'visibility:hidden'`);
+      expect(retVal).toContain(`class="tile"`);
+
+   })
 })

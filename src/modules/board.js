@@ -10,7 +10,7 @@ export class Board {
 
 		//time to display the tile value in seconds
 		this.flippedTileTimeout = 2;
-		this.flippedTile = null;
+		this.flippedTileIndex= null;
 
 		this.boardElement = this.window.document.querySelector('#board');
 		this.board = '';
@@ -32,7 +32,7 @@ export class Board {
 			let tileNum = event.target.dataset.index;
 
 			//ignore click on the same tile
-			if( this.flippedTile === tileNum) {
+			if( this.flippedTileIndex === tileNum) {
 				return;
 			}
 			this.update(tileNum);
@@ -54,23 +54,23 @@ export class Board {
 		this.tilesArray[tileNum].flip();
 		this.render();
 		
-		if(this.flippedTile === null) {
-			this.flippedTile = tileNum;
+		if(this.flippedTileIndex === null) {
+			this.flippedTileIndex = tileNum;
 			this.boardReady = true;
 		} else {
 			this.window.setTimeout(() => {
-				if(this.tilesMatch(this.flippedTile, tileNum)) {
+				if(this.tilesMatch(this.flippedTileIndex, tileNum)) {
 					this.tilesArray[tileNum].markSolved();
-					this.tilesArray[this.flippedTile].markSolved();
+					this.tilesArray[this.flippedTileIndex].markSolved();
 				} else {
 					this.tilesArray[tileNum].flip();
-					this.tilesArray[this.flippedTile].flip();
+					this.tilesArray[this.flippedTileIndex].flip();
 				}
 
-				this.flippedTile = null;
+				this.flippedTileIndex = null;
 				this.render();
 				this.boardReady = true;
-			}, this.flippedTileTimeout*1000)
+			}, this.flippedTileIndexTimeout*1000)
 		}
 	}
 
