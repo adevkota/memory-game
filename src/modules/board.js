@@ -70,7 +70,7 @@ export class Board {
 				this.flippedTileIndex = null;
 				this.render();
 				this.boardReady = true;
-			}, this.flippedTileIndexTimeout*1000)
+			}, this.flippedTileTimeout*1000)
 		}
 	}
 
