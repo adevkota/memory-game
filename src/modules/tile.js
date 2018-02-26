@@ -14,6 +14,7 @@ export class Tile {
 		this.isSolved = true;
 	}
 	render(){
+		console.log(this.index);
 		return `<div 
 			class="tile"
 			data-index = ${this.index}

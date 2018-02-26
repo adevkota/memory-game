@@ -1,16 +1,28 @@
 #board{
-   display: grid;
-   grid-gap: 5px;
-   grid-template-columns: 50px 50px 50px 50px 50px 50px;
-   grid-template-rows: auto;
-   grid-template-areas: 
-   "tile tile tile tile tile tile"
-   "tile tile tile tile tile tile"
-   "tile tile tile tile tile tile"
-   "tile tile tile tile tile tile";
+	display: grid;
+	grid-gap: 5px;
+	grid-template-columns: 80px 80px 80px 80px;
+	grid-template-rows: auto;
 }
 
 .tile {
-   background-color: teal;
-   height: 50px;
+	background-color: teal;
+	height: 80px;
+	font-size: 30px;
+	color: white;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+}
+
+@media (min-width: 650px) {
+	#board{
+		grid-template-columns: 100px 100px 100px 100px 100px 100px;
+	}
+
+	.tile{
+		height:100px;
+	}
 }
