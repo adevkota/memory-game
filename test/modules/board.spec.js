@@ -13,6 +13,9 @@ describe("Board", function() {
                addEventListener: (type, event)  => {}
             }
          }
+      },
+      setTimeout : (cb, timeout) => {
+         cb();
       }
    }
    beforeEach(() => {
@@ -101,13 +104,33 @@ describe("Board", function() {
    describe("update method", () => {
       beforeEach(() => {
          board.init();
-         board.flippedTileIndex = null;
+         board.flippedTileIndex = testIndex;
       })
       it('should update flipped index if it another card is not flipped', () => {
          
+         board.flippedTileIndex = null;
          board.update(testIndex);
          expect(board.render).toHaveBeenCalled();
          expect(board.flippedTileIndex).toEqual(testIndex);
+      })
+
+      it('should mark tile as solved if current flipped tile matched the new flipped tile', () => {
+         board.tilesArray.map((curVal) => {
+            spyOn(curVal, "markSolved");
+         });
+         board.update(testIndex);
+         expect(board.tilesArray[testIndex].markSolved).toHaveBeenCalled();
+         expect(board.render).toHaveBeenCalled();
+      })
+    
+      it('should flip tiles if current flipped tile doesnt matched the new flipped tile', () => {
+         board.tilesArray.map((curVal) => {
+            spyOn(curVal, "flip");
+         });
+         board.update(testIndex+1);
+         expect(board.tilesArray[testIndex].flip).toHaveBeenCalled();
+         expect(board.tilesArray[testIndex+1].flip).toHaveBeenCalled();
+         expect(board.render).toHaveBeenCalled();
       })
    });
 })
