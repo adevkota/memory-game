@@ -28,14 +28,44 @@ describe("Board", function() {
       expect(board.boardSize).toEqual(24);
    })
 
-   it("init should initlize the board and call render", () => {
-      
-      expect(board.tilesArray.length).toEqual(0);
-      board.init();
-      expect(board.tilesArray.length).toEqual(24);
-      expect(board.render).toHaveBeenCalled();
+   describe("init", () => {
+      it("should initlize the board and call render", () => {
+         expect(board.tilesArray.length).toEqual(0);
+         board.init();
+         expect(board.tilesArray.length).toEqual(24);
+         expect(board.render).toHaveBeenCalled();
+      })
+
+      it("should only add eventListener once", () => {
+         spyOn(board.boardElement, 'addEventListener');
+         board.init();
+         board.init();
+         expect(board.boardElement.addEventListener).toHaveBeenCalled();
+         expect(board.boardEventRegistered).toEqual(true);
+         expect(board.boardElement.addEventListener).toHaveBeenCalledTimes(1);
+
+      })
    })
 
+   describe("initTilesArray" , () => {
+      beforeEach(() => {
+         spyOn(Math, 'random').and.callThrough();
+      });
+
+      it("should initialize shuffled tile board is shuffle param is true", () => {
+         expect(board.tilesArray.length).toEqual(0);
+         board.initTilesArray(true);
+         expect(Math.random).toHaveBeenCalled();
+         expect(board.tilesArray.length).toEqual(board.boardSize);
+      });
+      
+      it("should initialize shuffled tile board is shuffle param is true", () => {
+         expect(board.tilesArray.length).toEqual(0);
+         board.initTilesArray(false);
+         expect(Math.random).not.toHaveBeenCalled();
+         expect(board.tilesArray.length).toEqual(board.boardSize);
+      });
+   })
    it("clickHandler should call update if clicked on a different tile", () => {
       board.boardReady = true;
       let event = {

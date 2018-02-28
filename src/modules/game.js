@@ -2,7 +2,6 @@ import { Board } from "./board";
 
 export class Game {
 	constructor(myWindow) {
-		console.log(myWindow);
 		this.window = myWindow || window;
 		this.board = new Board();
 
