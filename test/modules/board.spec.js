@@ -13,6 +13,9 @@ describe("Board", function() {
                addEventListener: (type, event)  => {}
             }
          }
+      },
+      setTimeout : (cb, timeout) => {
+         cb();
       }
    }
    beforeEach(() => {
@@ -25,14 +28,44 @@ describe("Board", function() {
       expect(board.boardSize).toEqual(24);
    })
 
-   it("init should initlize the board and call render", () => {
-      
-      expect(board.tilesArray.length).toEqual(0);
-      board.init();
-      expect(board.tilesArray.length).toEqual(24);
-      expect(board.render).toHaveBeenCalled();
+   describe("init", () => {
+      it("should initlize the board and call render", () => {
+         expect(board.tilesArray.length).toEqual(0);
+         board.init();
+         expect(board.tilesArray.length).toEqual(24);
+         expect(board.render).toHaveBeenCalled();
+      })
+
+      it("should only add eventListener once", () => {
+         spyOn(board.boardElement, 'addEventListener');
+         board.init();
+         board.init();
+         expect(board.boardElement.addEventListener).toHaveBeenCalled();
+         expect(board.boardEventRegistered).toEqual(true);
+         expect(board.boardElement.addEventListener).toHaveBeenCalledTimes(1);
+
+      })
    })
 
+   describe("initTilesArray" , () => {
+      beforeEach(() => {
+         spyOn(Math, 'random').and.callThrough();
+      });
+
+      it("should initialize shuffled tile board is shuffle param is true", () => {
+         expect(board.tilesArray.length).toEqual(0);
+         board.initTilesArray(true);
+         expect(Math.random).toHaveBeenCalled();
+         expect(board.tilesArray.length).toEqual(board.boardSize);
+      });
+      
+      it("should initialize shuffled tile board is shuffle param is true", () => {
+         expect(board.tilesArray.length).toEqual(0);
+         board.initTilesArray(false);
+         expect(Math.random).not.toHaveBeenCalled();
+         expect(board.tilesArray.length).toEqual(board.boardSize);
+      });
+   })
    it("clickHandler should call update if clicked on a different tile", () => {
       board.boardReady = true;
       let event = {
@@ -101,13 +134,33 @@ describe("Board", function() {
    describe("update method", () => {
       beforeEach(() => {
          board.init();
-         board.flippedTileIndex = null;
+         board.flippedTileIndex = testIndex;
       })
       it('should update flipped index if it another card is not flipped', () => {
          
+         board.flippedTileIndex = null;
          board.update(testIndex);
          expect(board.render).toHaveBeenCalled();
          expect(board.flippedTileIndex).toEqual(testIndex);
+      })
+
+      it('should mark tile as solved if current flipped tile matched the new flipped tile', () => {
+         board.tilesArray.map((curVal) => {
+            spyOn(curVal, "markSolved");
+         });
+         board.update(testIndex);
+         expect(board.tilesArray[testIndex].markSolved).toHaveBeenCalled();
+         expect(board.render).toHaveBeenCalled();
+      })
+    
+      it('should flip tiles if current flipped tile doesnt matched the new flipped tile', () => {
+         board.tilesArray.map((curVal) => {
+            spyOn(curVal, "flip");
+         });
+         board.update(testIndex+1);
+         expect(board.tilesArray[testIndex].flip).toHaveBeenCalled();
+         expect(board.tilesArray[testIndex+1].flip).toHaveBeenCalled();
+         expect(board.render).toHaveBeenCalled();
       })
    });
 })

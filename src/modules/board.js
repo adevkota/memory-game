@@ -6,6 +6,7 @@ export class Board {
 		this.window = myWindow || window;
 		this.tilesArray = [];
 		this.boardSize = 24;
+		this.boardEventRegistered = false;
 
 
 		//time to display the tile value in seconds
@@ -16,17 +17,39 @@ export class Board {
 		this.board = '';
 		this.boardReady = false;
 	}
-
-	init() {
-		for (let i = 0; i < this.boardSize; i++) {
-			let tile = new Tile(i, i%12);
-			this.tilesArray.push(tile);
-		}
+	
+	init(shuffle) {
+		this.tilesArray = [];
+		this.initTilesArray(shuffle);
 		this.render();
-		this.boardElement.addEventListener("click", (e) => {this.onClick(e)});
 		this.boardReady = true;
+
+		if(!this.boardEventRegistered) {
+			this.boardElement.addEventListener("click", (e) => {this.onClick(e)});
+			this.boardEventRegistered = true;
+		}
 	}
 	
+	initTilesArray(shuffle) {
+		let tempArray = []
+		for (let i = 0; i < this.boardSize; i++) {
+			tempArray.push(i%12);
+		}
+		
+		if (shuffle) {
+			for (let i = this.boardSize - 1; i > 0; i--){
+				let j = Math.floor(Math.random() * (i + 1)) ;
+				let temp = tempArray[i];
+				tempArray[i] = tempArray[j];
+				tempArray[j] = temp;
+			}
+		} 
+
+		for (let i = 0; i < tempArray.length; i++) {
+			let tile = new Tile(i, tempArray[i]);
+			this.tilesArray.push(tile);
+		}
+	}
 	onClick(event) {
 		if(this.boardReady && event.target && event.target.classList.contains("tile")) {
 			let tileNum = event.target.dataset.index;

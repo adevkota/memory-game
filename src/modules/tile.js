@@ -21,4 +21,5 @@ export class Tile {
 				${this.isFlipped? this.value : ''}
 			</div>`
 	}
+
 }
