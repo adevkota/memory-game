@@ -51,8 +51,6 @@ export class Board {
 		}
 	}
 	onClick(event) {
-		
-		console.log('x');
 		if(this.boardReady && event.target && event.target.classList.contains("tile")) {
 			let tileNum = event.target.dataset.index;
 
