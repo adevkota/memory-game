@@ -3,6 +3,11 @@
 	grid-gap: 5px;
 	grid-template-columns: 80px 80px 80px 80px;
 	grid-template-rows: auto;
+	margin:10px auto;
+}
+
+#controls {
+	margin:10px auto;
 }
 
 .tile {
