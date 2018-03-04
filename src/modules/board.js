@@ -33,17 +33,17 @@ export class Board {
 	initTilesArray(shuffle) {
 		let tempArray = []
 		for (let i = 0; i < this.boardSize; i++) {
-			tempArray.push(i%12);
+			tempArray.push(i% (this.boardSize/2));
 		}
 		
 		if (shuffle) {
-			for (let i = this.boardSize - 1; i > 0; i--){
+			for (let i = this.boardSize - 1; i >= 0; i--){
 				let j = Math.floor(Math.random() * (i + 1)) ;
 				let temp = tempArray[i];
 				tempArray[i] = tempArray[j];
 				tempArray[j] = temp;
 			}
-		} 
+		}
 
 		for (let i = 0; i < tempArray.length; i++) {
 			let tile = new Tile(i, tempArray[i]);
