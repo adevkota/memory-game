@@ -1,7 +1,7 @@
 export class Tile {
 	constructor(index, val) {
 		this.index = index;
-		this.value = val || index%12;
+		this.value = val;
 		this.isFlipped = false;
 		this.isSolved = false;
 	}
