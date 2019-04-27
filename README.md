@@ -1,5 +1,5 @@
 # Simple web based memory game
-
+Written in ES6 to learn modular web dev without a framework
 
 ## Try it:
 https://adevkota.me/memory-game/
